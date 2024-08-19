@@ -22,16 +22,31 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         // Send a ping to confirm a successful connection
-        const productCollection = client.db("phoneNestDB").collection("productCollection");
+        const productCollection = client.db("phoneNestDB").collection("products");
 
         app.get('/', (req, res) => {
             res.send('Hello World!')
         })
 
-        app.get('/product', async (req, res) => {
-            const result = await productCollection.find().toArray()
+        app.get('/products', async (req, res) => {
+            const size = parseInt(req.query.size)
+            const page = parseInt(req.query.page) - 1
+            const result = await productCollection
+                .find()
+                .sort({ testDate: 1 })
+                .skip(page * size)
+                .limit(size)
+                .toArray()
             res.send(result)
         })
+
+
+        app.get('/product-count', async (req, res) => {
+            const count = await productCollection.countDocuments()
+            res.send({ count })
+        })
+
+
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
