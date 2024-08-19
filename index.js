@@ -31,8 +31,14 @@ async function run() {
         app.get('/products', async (req, res) => {
             const size = parseInt(req.query.size)
             const page = parseInt(req.query.page) - 1
+            const search = req.query.search
+
+            let query = {}
+            if(search !== '' && search!== 'null') {
+              query = { ProductName: { $regex: search, $options: 'i' } }
+            }
             const result = await productCollection
-                .find()
+                .find(query)
                 .sort({ testDate: 1 })
                 .skip(page * size)
                 .limit(size)
