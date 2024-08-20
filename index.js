@@ -20,7 +20,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
         // Send a ping to confirm a successful connection
         const productCollection = client.db("phoneNestDB").collection("products");
 
@@ -33,13 +33,17 @@ async function run() {
             const page = parseInt(req.query.page) - 1
             const search = req.query.search;
             const sortItem = req.query.sort;
-
+            const selectedCategory = req.query.selectedCategory;
+            const minPrice = parseFloat(req.query.minPrice); 
+            const maxPrice = parseFloat(req.query.maxPrice); 
 
             let query = {}
             if(search !== '' && search!== 'null') {
               query = { ProductName: { $regex: search, $options: 'i' } }
             }
-
+            if(selectedCategory !== '' && selectedCategory!== 'null') {
+                query = { Category:  { $regex: selectedCategory, $options: 'i' }}
+              }
             let sort = {}
             if(sortItem=== 'lowToHigh'){
                 sort = {Price: 1}
@@ -53,7 +57,6 @@ async function run() {
             if(sortItem=== 'old'){
                 sort = {ProductCreationDateTime: 1}
             }
-          
 
             const result = await productCollection
                 .find(query)
@@ -71,8 +74,8 @@ async function run() {
         })
 
 
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+        // await client.db("admin").command({ ping: 1 });
+        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // Ensures that the client will close when you finish/error
         // await client.close();
