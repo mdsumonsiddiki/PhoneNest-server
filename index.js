@@ -37,8 +37,6 @@ async function run() {
             const search = req.query.search;
             const sortItem = req.query.sort;
             const selectedCategory = req.query.selectedCategory;
-            const minPrice = parseFloat(req.query.minPrice); 
-            const maxPrice = parseFloat(req.query.maxPrice); 
 
             let query = {}
             if(search !== '' && search!== 'null') {
