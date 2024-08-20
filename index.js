@@ -47,6 +47,12 @@ async function run() {
             if(sortItem=== 'highToLow'){
                 sort = {Price: -1}
             }
+            if(sortItem=== 'new'){
+                sort = {ProductCreationDateTime: -1}
+            }
+            if(sortItem=== 'old'){
+                sort = {ProductCreationDateTime: 1}
+            }
           
 
             const result = await productCollection
