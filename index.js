@@ -31,15 +31,27 @@ async function run() {
         app.get('/products', async (req, res) => {
             const size = parseInt(req.query.size)
             const page = parseInt(req.query.page) - 1
-            const search = req.query.search
+            const search = req.query.search;
+            const sortItem = req.query.sort;
+
 
             let query = {}
             if(search !== '' && search!== 'null') {
               query = { ProductName: { $regex: search, $options: 'i' } }
             }
+
+            let sort = {}
+            if(sortItem=== 'lowToHigh'){
+                sort = {Price: 1}
+            }
+            if(sortItem=== 'highToLow'){
+                sort = {Price: -1}
+            }
+          
+
             const result = await productCollection
                 .find(query)
-                .sort({ testDate: 1 })
+                .sort(sort)
                 .skip(page * size)
                 .limit(size)
                 .toArray()
