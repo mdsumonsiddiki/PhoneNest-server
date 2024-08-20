@@ -4,7 +4,10 @@ const app = express()
 const port = 5000
 const { MongoClient, ServerApiVersion } = require('mongodb');
 require('dotenv').config()
-app.use(cors());
+app.use( cors({
+    origin: ["http://localhost:5173", "https://phonenest-7c6b9.web.app"],
+    credentials: true
+  }));
 app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.mmcp2nn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
